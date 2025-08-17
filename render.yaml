@@ -2,11 +2,11 @@ services:
   - type: web
     name: ipsco-django-app
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn gestion_vehicules.wsgi:application
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn gestion_vehicules.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.9
       - key: DJANGO_SETTINGS_MODULE
         value: gestion_vehicules.settings
       - key: DATABASE_URL
