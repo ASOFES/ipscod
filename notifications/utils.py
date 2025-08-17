@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-from twilio.rest import Client
+# from twilio.rest import Client  # Commenté pour le déploiement
 import json
 from pywebpush import webpush, WebPushException
 from .models import PushSubscription
@@ -45,51 +45,54 @@ def send_sms(phone_number, message):
     Returns:
         bool: True si l'envoi a réussi, False sinon
     """
-    import logging
-    logger = logging.getLogger('notifications')
+    # Fonction commentée pour le déploiement - Twilio non disponible
+    return False
     
-    # Vérifier que le numéro de téléphone est valide
-    if not phone_number or not isinstance(phone_number, str) or not phone_number.strip():
-        logger.error("Numéro de téléphone invalide pour l'envoi de SMS")
-        return False
-        
-    # Nettoyer le numéro de téléphone (supprimer les espaces et caractères spéciaux)
-    phone_number = ''.join(c for c in phone_number if c.isdigit() or c == '+')
+    # import logging
+    # logger = logging.getLogger('notifications')
     
-    # Vérifier que le message n'est pas vide
-    if not message or not message.strip():
-        logger.error("Le message SMS ne peut pas être vide")
-        return False
+    # # Vérifier que le numéro de téléphone est valide
+    # if not phone_number or not isinstance(phone_number, str) or not phone_number.strip():
+    #     logger.error("Numéro de téléphone invalide pour l'envoi de SMS")
+    #     return False
         
-    # Vérifier que les identifiants Twilio sont configurés
-    if not all([
-        hasattr(settings, 'TWILIO_ACCOUNT_SID') and settings.TWILIO_ACCOUNT_SID,
-        hasattr(settings, 'TWILIO_AUTH_TOKEN') and settings.TWILIO_AUTH_TOKEN,
-        hasattr(settings, 'TWILIO_PHONE_NUMBER') and settings.TWILIO_PHONE_NUMBER
-    ]):
-        logger.error("Configuration Twilio incomplète. Vérifiez les variables d'environnement.")
-        return False
+    # # Nettoyer le numéro de téléphone (supprimer les espaces et caractères spéciaux)
+    # phone_number = ''.join(c for c in phone_number if c.isdigit() or c == '+')
     
-    try:
-        # Initialiser le client Twilio
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    # # Vérifier que le message n'est pas vide
+    # if not message or not message.strip():
+    #     logger.error("Le message SMS ne peut pas être vide")
+    #     return False
         
-        # Envoyer le SMS
-        response = client.messages.create(
-            body=message,
-            from_=settings.TWILIO_PHONE_NUMBER,
-            to=phone_number
-        )
+    # # Vérifier que les identifiants Twilio sont configurés
+    # if not all([
+    #     hasattr(settings, 'TWILIO_ACCOUNT_SID') and settings.TWILIO_ACCOUNT_SID,
+    #     hasattr(settings, 'TWILIO_AUTH_TOKEN') and settings.TWILIO_AUTH_TOKEN,
+    #     hasattr(settings, 'TWILIO_PHONE_NUMBER') and settings.TWILIO_PHONE_NUMBER
+    # ]):
+    #     logger.error("Configuration Twilio incomplète. Vérifiez les variables d'environnement.")
+    #     return False
+    
+    # try:
+    #     # Initialiser le client Twilio
+    #     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         
-        # Journaliser le succès
-        logger.info(f"SMS envoyé avec succès à {phone_number}. SID: {response.sid}")
-        return True
+    #     # Envoyer le SMS
+    #     response = client.messages.create(
+    #         body=message,
+    #         from_=settings.TWILIO_PHONE_NUMBER,
+    #         to=phone_number
+    #     )
         
-    except Exception as e:
-        # Journaliser l'erreur
-        error_msg = f"Erreur lors de l'envoi du SMS à {phone_number}: {str(e)}"
-        logger.error(error_msg, exc_info=True)
-        return False
+    #         # Journaliser le succès
+    #         logger.info(f"SMS envoyé avec succès à {phone_number}. SID: {response.sid}")
+    #         return True
+        
+    # except Exception as e:
+    #     # Journaliser l'erreur
+    #     error_msg = f"Erreur lors de l'envoi du SMS à {phone_number}: {str(e)}"
+    #     logger.error(error_msg, exc_info=True)
+    #         return False
 
 def send_whatsapp(phone_number, message):
     """
@@ -102,55 +105,58 @@ def send_whatsapp(phone_number, message):
     Returns:
         bool: True si l'envoi a réussi, False sinon
     """
-    import logging
-    logger = logging.getLogger('notifications')
+    # Fonction commentée pour le déploiement - Twilio non disponible
+    return False
     
-    # Vérifier que le numéro de téléphone est valide
-    if not phone_number or not isinstance(phone_number, str) or not phone_number.strip():
-        logger.error("Numéro de téléphone invalide pour l'envoi de WhatsApp")
-        return False
-        
-    # Nettoyer le numéro de téléphone (supprimer les espaces et caractères spéciaux)
-    phone_number = ''.join(c for c in phone_number if c.isdigit() or c == '+')
+    # import logging
+    # logger = logging.getLogger('notifications')
     
-    # Vérifier que le message n'est pas vide
-    if not message or not message.strip():
-        logger.error("Le message WhatsApp ne peut pas être vide")
-        return False
+    # # Vérifier que le numéro de téléphone est valide
+    # if not phone_number or not isinstance(phone_number, str) or not phone_number.strip():
+    #     logger.error("Numéro de téléphone invalide pour l'envoi de WhatsApp")
+    #     return False
         
-    # Vérifier que les identifiants Twilio sont configurés
-    if not all([
-        hasattr(settings, 'TWILIO_ACCOUNT_SID') and settings.TWILIO_ACCOUNT_SID,
-        hasattr(settings, 'TWILIO_AUTH_TOKEN') and settings.TWILIO_AUTH_TOKEN,
-        hasattr(settings, 'TWILIO_WHATSAPP_NUMBER') and settings.TWILIO_WHATSAPP_NUMBER
-    ]):
-        logger.error("Configuration Twilio WhatsApp incomplète. Vérifiez les variables d'environnement.")
-        return False
+    # # Nettoyer le numéro de téléphone (supprimer les espaces et caractères spéciaux)
+    # phone_number = ''.join(c for c in phone_number if c.isdigit() or c == '+')
     
-    try:
-        # Initialiser le client Twilio
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    # # Vérifier que le message n'est pas vide
+    # if not message or not message.strip():
+    #     logger.error("Le message WhatsApp ne peut pas être vide")
+    #     return False
         
-        # Formater les numéros pour WhatsApp
-        from_whatsapp = f"whatsapp:{settings.TWILIO_WHATSAPP_NUMBER}"
-        to_whatsapp = f"whatsapp:{phone_number}"
+    # # Vérifier que les identifiants Twilio sont configurés
+    # if not all([
+    #     hasattr(settings, 'TWILIO_ACCOUNT_SID') and settings.TWILIO_ACCOUNT_SID,
+    #     hasattr(settings, 'TWILIO_AUTH_TOKEN') and settings.TWILIO_AUTH_TOKEN,
+    #     hasattr(settings, 'TWILIO_WHATSAPP_NUMBER') and settings.TWILIO_WHATSAPP_NUMBER
+    # ]):
+    #     logger.error("Configuration Twilio WhatsApp incomplète. Vérifiez les variables d'environnement.")
+    #     return False
+    
+    # try:
+    #     # Initialiser le client Twilio
+    #     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         
-        # Envoyer le message WhatsApp
-        response = client.messages.create(
-            body=message,
-            from_=from_whatsapp,
-            to=to_whatsapp
-        )
+    #     # Formater les numéros pour WhatsApp
+    #     from_whatsapp = f"whatsapp:{settings.TWILIO_WHATSAPP_NUMBER}"
+    #     to_whatsapp = f"whatsapp:{phone_number}"
         
-        # Journaliser le succès
-        logger.info(f"Message WhatsApp envoyé avec succès à {phone_number}. SID: {response.sid}")
-        return True
+    #     # Envoyer le message WhatsApp
+    #     response = client.messages.create(
+    #         body=message,
+    #         from_=from_whatsapp,
+    #         to=to_whatsapp
+    #     )
         
-    except Exception as e:
-        # Journaliser l'erreur
-        error_msg = f"Erreur lors de l'envoi du message WhatsApp à {phone_number}: {str(e)}"
-        logger.error(error_msg, exc_info=True)
-        return False
+    #         # Journaliser le succès
+    #         logger.info(f"Message WhatsApp envoyé avec succès à {phone_number}. SID: {response.sid}")
+    #         return True
+        
+    # except Exception as e:
+    #     # Journaliser l'erreur
+    #     error_msg = f"Erreur lors de l'envoi du message WhatsApp à {phone_number}: {str(e)}"
+    #     logger.error(error_msg, exc_info=True)
+    #         return False
 
 def notify_course_participants(participants, message, **kwargs):
     """
