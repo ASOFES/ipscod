@@ -13,7 +13,7 @@ services:
           name: ipsco-postgres
           property: connectionString
       - key: SECRET_KEY
-        generateValue: true
+        value: "django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment"
       - key: DEBUG
         value: false
       - key: ALLOWED_HOSTS
