@@ -6,13 +6,12 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - SECRET_KEY=django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment
       - DEBUG=False
-      - DATABASE_URL=${DATABASE_URL}
-      - SECRET_KEY=${SECRET_KEY}
+      - DJANGO_SETTINGS_MODULE=gestion_vehicules.settings
     volumes:
       - .:/app
-    depends_on:
-      - db
+    command: gunicorn gestion_vehicules.wsgi:application --bind 0.0.0.0:8000 --reload
   
   db:
     image: postgres:13

@@ -1,6 +1,7 @@
 # Git
 .git
 .gitignore
+.gitattributes
 
 # Python
 __pycache__
@@ -38,21 +39,30 @@ staticfiles/
 *.pub/
 build/
 *.lock
-
-# Mobile apps
 android/.gradle/
 android/app/build/
 ios/Pods/
 ios/build/
+
+# Mobile apps
+mobile_apps/
+ipsco_test_web/
+ipsco-mobile-app/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Logs
@@ -62,4 +72,12 @@ logs/
 # Scripts temporaires
 *.bat
 *.ps1
-*.sh 
+*.sh
+
+# Documentation
+*.md
+README*
+
+# Tests
+test/
+tests/ 

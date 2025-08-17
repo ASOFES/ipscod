@@ -1,5 +1,12 @@
 FROM python:3.11-slim
 
+# Définir les variables d'environnement par défaut
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV SECRET_KEY=django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment
+ENV DEBUG=False
+ENV DJANGO_SETTINGS_MODULE=gestion_vehicules.settings
+
 # Définir le répertoire de travail
 WORKDIR /app
 
@@ -10,14 +17,12 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copier les fichiers de dépendances
+# Copier et installer les dépendances Python
 COPY requirements.txt .
-
-# Installer les dépendances Python
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copier le code source
+# Copier le code de l'application
 COPY . .
 
 # Collecter les fichiers statiques
@@ -26,5 +31,5 @@ RUN python manage.py collectstatic --noinput
 # Exposer le port
 EXPOSE 8000
 
-# Commande de démarrage
-CMD ["gunicorn", "gestion_vehicules.wsgi:application", "--bind", "0.0.0.0:8000"] 
+# Commande de démarrage avec variables d'environnement
+CMD ["sh", "-c", "export SECRET_KEY=${SECRET_KEY:-django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment} && export DEBUG=${DEBUG:-False} && gunicorn gestion_vehicules.wsgi:application --bind 0.0.0.0:8000"] 
