@@ -124,15 +124,15 @@ WSGI_APPLICATION = 'gestion_vehicules.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Configuration de base de donnÃ©es avec support PostgreSQL pour Railway/Heroku/Render
+# Configuration de base de données avec support PostgreSQL pour Railway/Heroku/Render
 print(f"DATABASE_URL exists: {'DATABASE_URL' in os.environ}")
 print(f"DATABASE_URL value: {os.environ.get('DATABASE_URL', 'NOT_SET')}")
 print(f"PGHOST exists: {'PGHOST' in os.environ}")
 print(f"PGHOST value: {os.environ.get('PGHOST', 'NOT_SET')}")
 
-# Configuration PostgreSQL (prioritÃ© aux variables directes)
+# Configuration PostgreSQL (priorité aux variables directes)
 if 'PGHOST' in os.environ or 'PGUSER' in os.environ:
-    # Utiliser les variables PostgreSQL de Railway (prioritÃ© absolue)
+    # Utiliser les variables PostgreSQL de Railway (priorité absolue)
     print("Using Railway PostgreSQL variables (PRIORITY)")
     DATABASES = {
         'default': {
@@ -147,18 +147,39 @@ if 'PGHOST' in os.environ or 'PGUSER' in os.environ:
     print(f"Using HOST: {os.environ.get('PGHOST', 'localhost')}")
     print(f"Using DATABASE: {os.environ.get('PGDATABASE', 'railway')}")
     print(f"Using USER: {os.environ.get('PGUSER', 'postgres')}")
-elif 'DATABASE_URL' in os.environ:
-    # Utiliser PostgreSQL sur Railway/Heroku
+elif 'DATABASE_URL' in os.environ and os.environ.get('DATABASE_URL'):
+    # Utiliser PostgreSQL sur Railway/Heroku/Render
     print("Using PostgreSQL configuration with DATABASE_URL")
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    try:
+        DATABASES = {
+            'default': dj_database_url.config(
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
+        }
+        print("DATABASE_URL configuration successful")
+    except Exception as e:
+        print(f"Error parsing DATABASE_URL: {e}")
+        # Fallback to SQLite
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     # Utiliser SQLite en local
     print("Using SQLite configuration")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# Vérification de sécurité
+if 'default' not in DATABASES or 'ENGINE' not in DATABASES['default']:
+    print("ERROR: DATABASES configuration is invalid, using SQLite fallback")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
