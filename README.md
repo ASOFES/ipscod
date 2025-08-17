@@ -1,277 +1,127 @@
-# IPS-CO - Gestion de Parc Automobile
+# IPSCO - Système de Gestion de Véhicules
 
-## 📋 Description
+## Description
 
-IPS-CO (International People Solutions) est une application web Django complète pour la gestion de parc automobile. Elle permet de gérer les véhicules, les chauffeurs, les missions, les entretiens, les ravitaillements et les rapports de manière centralisée.
+IPSCO est une application Django complète pour la gestion de flotte de véhicules, incluant :
+- Gestion des chauffeurs et missions
+- Suivi des demandes de transport
+- Gestion de l'entretien des véhicules
+- Rapports et statistiques
+- Applications mobiles Flutter
+- Système de notifications
 
-## 🚀 Fonctionnalités principales
-
-### 👥 Gestion des utilisateurs
-- **Demandeurs** : Création et suivi des demandes de transport
-- **Chauffeurs** : Gestion des missions et rapports de conduite
-- **Dispatchers** : Attribution des missions et suivi des courses
-- **Administrateurs** : Gestion complète du système
-
-### 🚗 Gestion des véhicules
-- Enregistrement des véhicules avec photos
-- Suivi du kilométrage
-- Historique des entretiens
-- Gestion des documents
-
-### 📋 Missions et courses
-- Création de demandes de transport
-- Attribution automatique des chauffeurs et véhicules
-- Suivi en temps réel des missions
-- Rapports détaillés
-
-### 🔧 Entretien et maintenance
-- Planification des entretiens
-- Suivi des coûts
-- Historique complet
-- Alertes de maintenance
-
-### ⛽ Ravitaillement
-- Enregistrement des ravitaillements
-- Calcul des consommations
-- Rapports de carburant
-- Optimisation des coûts
-
-### 📊 Rapports avancés
-- Rapports de chauffeurs avec scoring
-- Rapports de véhicules avec classification
-- Rapports de missions avec évaluation
-- Rapports de carburant détaillés
-- Export PDF et Excel
-
-### 🔒 Sécurité
-- Checklists de sécurité
-- Suivi des incidents
-- Notifications push
-- Contrôle d'accès
-
-## 🛠️ Technologies utilisées
-
-- **Backend** : Django 4.2.23
-- **Base de données** : SQLite (développement) / PostgreSQL (production)
-- **Frontend** : HTML5, CSS3, JavaScript, Bootstrap
-- **PDF** : xhtml2pdf, WeasyPrint
-- **Excel** : xlwt, openpyxl
-- **Notifications** : Service Workers, Push API
-- **Charts** : Chart.js
-
-## 📦 Installation
+## 🚀 Déploiement sur Render
 
 ### Prérequis
-- Python 3.9+
-- pip
-- Git
+- Compte Render.com
+- Repository GitHub connecté
 
-### Installation locale
+### Étapes de déploiement
 
-1. **Cloner le repository**
-```bash
-git clone <url-du-repo>
-cd mamo1
-```
+1. **Connecter le repository GitHub**
+   - Allez sur [Render.com](https://render.com)
+   - Cliquez sur "New +" → "Web Service"
+   - Connectez votre compte GitHub
+   - Sélectionnez le repository `ASOFES/ipscod`
 
-2. **Créer un environnement virtuel**
-```bash
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-```
+2. **Configuration automatique**
+   - Le fichier `render.yaml` configure automatiquement :
+     - Service web Python
+     - Base de données PostgreSQL
+     - Variables d'environnement
 
-3. **Installer les dépendances**
-```bash
-pip install -r requirements.txt
-```
+3. **Variables d'environnement**
+   - `DATABASE_URL` : Configurée automatiquement
+   - `SECRET_KEY` : Générée automatiquement
+   - `DEBUG` : `false` en production
+   - `ALLOWED_HOSTS` : `.onrender.com`
 
-4. **Configurer la base de données**
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-5. **Créer un superutilisateur**
-```bash
-python manage.py createsuperuser
-```
-
-6. **Collecter les fichiers statiques**
-```bash
-python manage.py collectstatic
-```
-
-7. **Lancer le serveur**
-```bash
-python manage.py runserver
-```
-
-L'application sera accessible à l'adresse : http://127.0.0.1:8000/
+4. **Déploiement**
+   - Render détecte automatiquement la configuration
+   - Le build se fait avec `pip install -r requirements.txt`
+   - L'application démarre avec `gunicorn gestion_vehicules.wsgi:application`
 
 ## 🏗️ Structure du projet
 
 ```
-mamo1/
-├── core/                    # Application principale
-├── chauffeur/              # Gestion des chauffeurs
-├── demandeur/              # Gestion des demandeurs
-├── dispatch/               # Gestion des dispatchers
-├── entretien/              # Gestion des entretiens
-├── rapport/                # Rapports et analyses
-├── ravitaillement/         # Gestion du carburant
-├── securite/               # Sécurité et checklists
-├── suivi/                  # Suivi des véhicules
-├── notifications/          # Système de notifications
-├── gestion_vehicules/      # Configuration Django
-├── static/                 # Fichiers statiques
-├── media/                  # Fichiers uploadés
-└── templates/              # Templates HTML
+ipsco-deploy-clean/
+├── gestion_vehicules/          # Configuration Django principale
+├── core/                       # Modèles et vues principales
+├── chauffeur/                  # Gestion des chauffeurs
+├── demandeur/                  # Demandes de transport
+├── dispatch/                   # Dispatch des missions
+├── entretien/                  # Gestion de l'entretien
+├── ravitaillement/             # Suivi du carburant
+├── rapport/                    # Génération de rapports
+├── securite/                   # Sécurité et checklists
+├── notifications/              # Système de notifications
+├── mobile_apps/                # Applications Flutter
+├── static/                     # Fichiers statiques
+└── media/                      # Fichiers uploadés
 ```
 
-## 👤 Utilisateurs par défaut
+## 🛠️ Technologies utilisées
 
-Après l'installation, vous pouvez utiliser :
-- **Utilisateur** : `toto`
-- **Mot de passe** : `admin123`
+- **Backend** : Django 4.2.7
+- **Base de données** : PostgreSQL
+- **Serveur** : Gunicorn
+- **Frontend** : HTML/CSS/JavaScript
+- **Mobile** : Flutter
+- **Déploiement** : Render.com
 
-## 📱 Modules principaux
+## 📱 Applications mobiles
 
-### 🚗 Gestion des véhicules
-- Ajout/modification/suppression de véhicules
-- Upload de photos
-- Suivi du kilométrage
-- Historique complet
+Le projet inclut plusieurs applications Flutter :
+- `ipsco-mobile-app/` : Application principale
+- `ipsco_test_web/` : Application de test
+- `mobile_apps/demandeur_app_new/` : Application demandeur
 
-### 👨‍💼 Gestion des chauffeurs
-- Profils détaillés
-- Missions assignées
-- Rapports de conduite
-- Évaluations
+## 🔧 Configuration locale
 
-### 📋 Demandes de transport
-- Création de demandes
-- Attribution automatique
-- Suivi des statuts
-- Notifications
+1. **Cloner le repository**
+   ```bash
+   git clone https://github.com/ASOFES/ipscod.git
+   cd ipscod
+   ```
 
-### 🔧 Entretien
-- Planification
-- Coûts
-- Historique
-- Alertes
+2. **Installer les dépendances**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### ⛽ Ravitaillement
-- Enregistrement
-- Calculs
-- Rapports
-- Optimisation
+3. **Configurer la base de données**
+   - Créer une base PostgreSQL
+   - Configurer `DATABASE_URL` dans `.env`
 
-### 📊 Rapports
-- Chauffeurs (scoring avancé)
-- Véhicules (classification)
-- Missions (évaluation)
-- Carburant (détails)
+4. **Lancer l'application**
+   ```bash
+   python manage.py runserver
+   ```
 
-## 🔧 Configuration
+## 📊 Fonctionnalités principales
 
-### Variables d'environnement
-Créez un fichier `.env` à la racine du projet :
+- **Gestion des véhicules** : Suivi, entretien, kilométrage
+- **Gestion des chauffeurs** : Missions, rapports, évaluations
+- **Demandes de transport** : Création, suivi, dispatch
+- **Rapports** : Statistiques, exports PDF, analyses
+- **Sécurité** : Checklists, contrôles, historique
+- **Notifications** : Système de rappels et alertes
 
-```env
-DEBUG=True
-SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///db.sqlite3
-ALLOWED_HOSTS=localhost,127.0.0.1
-```
+## 🌐 Déploiement
 
-### Base de données
-Le projet utilise SQLite par défaut. Pour PostgreSQL :
+L'application est configurée pour un déploiement automatique sur Render avec :
+- Configuration PostgreSQL automatique
+- Variables d'environnement sécurisées
+- Build et déploiement automatisés
+- Monitoring et logs intégrés
 
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'your_db_name',
-        'USER': 'your_username',
-        'PASSWORD': 'your_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-```
+## 📞 Support
 
-## 🚀 Déploiement
-
-### Production avec Gunicorn
-
-1. **Installer Gunicorn**
-```bash
-pip install gunicorn
-```
-
-2. **Configurer le serveur**
-```bash
-gunicorn gestion_vehicules.wsgi:application --bind 0.0.0.0:8000
-```
-
-### Docker (optionnel)
-
-```dockerfile
-FROM python:3.9
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 8000
-CMD ["gunicorn", "gestion_vehicules.wsgi:application", "--bind", "0.0.0.0:8000"]
-```
-
-## 📈 Fonctionnalités avancées
-
-### 🎯 Système de scoring
-- **Chauffeurs** : Productivité, Efficacité énergétique, Rentabilité, Régularité
-- **Véhicules** : Fiabilité, Efficacité énergétique, Rentabilité, Utilisation
-- **Missions** : Ponctualité, Efficacité, Rentabilité, Qualité
-
-### 📊 Rapports interactifs
-- Graphiques Chart.js
-- Filtres avancés
-- Export PDF/Excel
-- Tableaux de bord
-
-### 🔔 Notifications
-- Push notifications
-- Notifications en temps réel
-- Emails automatiques
-- Alertes système
-
-## 🤝 Contribution
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 👨‍💻 Auteur
-
-**Toto Mulumba** - Développeur Full Stack
-
-## 🙏 Remerciements
-
-- Django Framework
-- Bootstrap pour l'interface
-- Chart.js pour les graphiques
-- Tous les contributeurs
+Pour toute question ou problème :
+- Créez une issue sur GitHub
+- Consultez la documentation des applications mobiles
+- Vérifiez les logs de déploiement sur Render
 
 ---
 
-**IPS-CO - International People Solutions**  
-*Gestion de Parc Automobile Professionnelle* 
+**IPSCO** - Système de gestion de flotte professionnel 
