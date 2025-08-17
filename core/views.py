@@ -16,9 +16,9 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .decorators import admin_required, departement_required, require_departement_password
 from django import forms
 from django.views.decorators.http import require_POST, require_GET
-from twilio.rest import Client
+# from twilio.rest import Client  # Commenté pour le déploiement
 from django.conf import settings
-import africastalking
+# import africastalking  # Commenté pour le déploiement
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -203,16 +203,17 @@ def user_create(request):
                 )
                 # Envoi du SMS si le téléphone est renseigné
                 if telephone:
-                    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-                    try:
-                        message = client.messages.create(
-                            body=f"Bienvenue sur MAMO !\nIdentifiant: {username}\nMot de passe: {password}",
-                            from_=settings.TWILIO_PHONE_NUMBER,
-                            to=telephone
-                        )
-                        messages.success(request, f"SMS envoyé à {telephone}.")
-                    except Exception as e:
-                        messages.error(request, f"Erreur lors de l'envoi du SMS: {e}")
+                    # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) # Commenté pour le déploiement
+                    # try:
+                    #     message = client.messages.create(
+                    #         body=f"Bienvenue sur MAMO !\nIdentifiant: {username}\nMot de passe: {password}",
+                    #         from_=settings.TWILIO_PHONE_NUMBER,
+                    #         to=telephone
+                    #     )
+                    #     messages.success(request, f"SMS envoyé à {telephone}.")
+                    # except Exception as e:
+                    #     messages.error(request, f"Erreur lors de l'envoi du SMS: {e}")
+                    pass # Commenté pour le déploiement
                 messages.success(request, f"L'utilisateur {user.username} a été créé avec succès.")
                 return redirect('user_list')
             except Exception as e:
@@ -619,20 +620,18 @@ def send_test_sms(request):
         user = Utilisateur.objects.get(id=user_id)
         
         # Configuration Twilio
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        
-        # Envoi du SMS uniquement si l'utilisateur a un numéro de téléphone
-        if user.telephone:
-            message = client.messages.create(
-                body=f"Bonjour {user.username}, ceci est un message de test depuis Django avec Twilio!",
-                from_=settings.TWILIO_PHONE_NUMBER,
-                to=user.telephone
-            )
-            sms_sent = True
-            sms_sid = message.sid
-        else:
-            sms_sent = False
-            sms_sid = None
+        # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) # Commenté pour le déploiement
+        # try:
+        #     message = client.messages.create(
+        #         body=f"Bonjour {user.username}, ceci est un message de test depuis Django avec Twilio!",
+        #         from_=settings.TWILIO_PHONE_NUMBER,
+        #         to=user.telephone
+        #     )
+        #     sms_sent = True
+        #     sms_sid = message.sid
+        # except Exception as e:
+        #     sms_sent = False
+        #     sms_sid = None
         
         # Envoi de l'email uniquement si l'utilisateur a un email
         if user.email:
@@ -640,34 +639,34 @@ def send_test_sms(request):
             html_message = render_to_string('core/email_template.html', {
                 'username': user.username,
                 'message': "Ceci est un message de test depuis Django avec Twilio!",
-                'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)",
-                'sms_sid': sms_sid
+                # 'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)", # Commenté pour le déploiement
+                # 'sms_sid': sms_sid # Commenté pour le déploiement
             })
             plain_message = strip_tags(html_message)
             from_email = settings.EMAIL_HOST_USER
             
-            email_response = send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [user.email],  # Email uniquement à l'utilisateur concerné
-                html_message=html_message,
-                fail_silently=False,
-            )
+            # email_response = send_mail( # Commenté pour le déploiement
+            #     subject,
+            #     plain_message,
+            #     from_email,
+            #     [user.email],  # Email uniquement à l'utilisateur concerné
+            #     html_message=html_message,
+            #     fail_silently=False,
+            # )
             email_sent = True
         else:
             email_sent = False
             email_response = None
         
         # Message de confirmation approprié
-        if sms_sent and email_sent:
-            messages.success(request, f"Notifications envoyées à {user.username} (SMS et Email)")
-        elif sms_sent:
-            messages.success(request, f"SMS envoyé à {user.username} (pas d'email configuré)")
-        elif email_sent:
-            messages.success(request, f"Email envoyé à {user.username} (pas de numéro de téléphone configuré)")
-        else:
-            messages.warning(request, f"Aucune notification envoyée à {user.username} (pas d'email ni de téléphone configuré)")
+        # if sms_sent and email_sent: # Commenté pour le déploiement
+        #     messages.success(request, f"Notifications envoyées à {user.username} (SMS et Email)") # Commenté pour le déploiement
+        # elif sms_sent: # Commenté pour le déploiement
+        #     messages.success(request, f"SMS envoyé à {user.username} (pas d'email configuré)") # Commenté pour le déploiement
+        # elif email_sent: # Commenté pour le déploiement
+        #     messages.success(request, f"Email envoyé à {user.username} (pas de numéro de téléphone configuré)") # Commenté pour le déploiement
+        # else: # Commenté pour le déploiement
+        #     messages.warning(request, f"Aucune notification envoyée à {user.username} (pas d'email ni de téléphone configuré)") # Commenté pour le déploiement
             
     except Utilisateur.DoesNotExist:
         messages.error(request, "Utilisateur non trouvé")
@@ -690,35 +689,35 @@ def send_test_sms_africastalking(request):
         user = Utilisateur.objects.get(id=user_id)
         
         # Configuration Africa's Talking
-        africastalking.initialize(settings.AFRICASTALKING_USERNAME, settings.AFRICASTALKING_API_KEY)
-        sms = africastalking.SMS
-        whatsapp = africastalking.WhatsApp
+        # africastalking.initialize(settings.AFRICASTALKING_USERNAME, settings.AFRICASTALKING_API_KEY) # Commenté pour le déploiement
+        # sms = africastalking.SMS # Commenté pour le déploiement
+        # whatsapp = africastalking.WhatsApp # Commenté pour le déploiement
         
         # Envoi du SMS uniquement si l'utilisateur a un numéro de téléphone
         if user.telephone:
             # Envoi du SMS
-            sms_response = sms.send(
-                message=f"Bonjour {user.username}, ceci est un message de test depuis Django avec Africa's Talking!",
-                recipients=[user.telephone],
-                sender_id=settings.AFRICASTALKING_SENDER_ID
-            )
+            # sms_response = sms.send( # Commenté pour le déploiement
+            #     message=f"Bonjour {user.username}, ceci est un message de test depuis Django avec Africa's Talking!", # Commenté pour le déploiement
+            #     recipients=[user.telephone], # Commenté pour le déploiement
+            #     sender_id=settings.AFRICASTALKING_SENDER_ID # Commenté pour le déploiement
+            # ) # Commenté pour le déploiement
             sms_sent = True
             
             # Envoi du message WhatsApp
-            try:
-                whatsapp_response = whatsapp.send(
-                    message=f"Bonjour {user.username}, ceci est un message WhatsApp de test depuis Django avec Africa's Talking!",
-                    recipients=[user.telephone]
-                )
-                whatsapp_sent = True
-            except Exception as whatsapp_error:
-                whatsapp_sent = False
-                whatsapp_response = str(whatsapp_error)
+            # try: # Commenté pour le déploiement
+            #     whatsapp_response = whatsapp.send( # Commenté pour le déploiement
+            #         message=f"Bonjour {user.username}, ceci est un message WhatsApp de test depuis Django avec Africa's Talking!", # Commenté pour le déploiement
+            #         recipients=[user.telephone] # Commenté pour le déploiement
+            #     ) # Commenté pour le déploiement
+            #     whatsapp_sent = True # Commenté pour le déploiement
+            # except Exception as whatsapp_error: # Commenté pour le déploiement
+            #     whatsapp_sent = False # Commenté pour le déploiement
+            #     whatsapp_response = str(whatsapp_error) # Commenté pour le déploiement
         else:
             sms_sent = False
-            whatsapp_sent = False
-            sms_response = None
-            whatsapp_response = None
+            # whatsapp_sent = False # Commenté pour le déploiement
+            # sms_response = None # Commenté pour le déploiement
+            # whatsapp_response = None # Commenté pour le déploiement
         
         # Envoi de l'email uniquement si l'utilisateur a un email
         if user.email:
@@ -726,22 +725,22 @@ def send_test_sms_africastalking(request):
             html_message = render_to_string('core/email_template.html', {
                 'username': user.username,
                 'message': "Ceci est un message de test depuis Django avec Africa's Talking!",
-                'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)",
-                'whatsapp_status': "envoyé" if whatsapp_sent else "non envoyé",
-                'sms_response': sms_response,
-                'whatsapp_response': whatsapp_response
+                # 'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)", # Commenté pour le déploiement
+                # 'whatsapp_status': "envoyé" if whatsapp_sent else "non envoyé", # Commenté pour le déploiement
+                # 'sms_response': sms_response, # Commenté pour le déploiement
+                # 'whatsapp_response': whatsapp_response # Commenté pour le déploiement
             })
             plain_message = strip_tags(html_message)
             from_email = settings.EMAIL_HOST_USER
             
-            email_response = send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [user.email],  # Email uniquement à l'utilisateur concerné
-                html_message=html_message,
-                fail_silently=False,
-            )
+            # email_response = send_mail( # Commenté pour le déploiement
+            #     subject, # Commenté pour le déploiement
+            #     plain_message, # Commenté pour le déploiement
+            #     from_email, # Commenté pour le déploiement
+            #     [user.email],  # Email uniquement à l'utilisateur concerné
+            #     html_message=html_message, # Commenté pour le déploiement
+            #     fail_silently=False, # Commenté pour le déploiement
+            # ) # Commenté pour le déploiement
             email_sent = True
         else:
             email_sent = False
@@ -749,10 +748,10 @@ def send_test_sms_africastalking(request):
         
         # Message de confirmation approprié
         notifications = []
-        if sms_sent:
-            notifications.append("SMS")
-        if whatsapp_sent:
-            notifications.append("WhatsApp")
+        # if sms_sent: # Commenté pour le déploiement
+        #     notifications.append("SMS") # Commenté pour le déploiement
+        # if whatsapp_sent: # Commenté pour le déploiement
+        #     notifications.append("WhatsApp") # Commenté pour le déploiement
         if email_sent:
             notifications.append("Email")
             
@@ -774,9 +773,9 @@ def send_mission_notifications(mission):
     """
     try:
         # Configuration Africa's Talking
-        africastalking.initialize(settings.AFRICASTALKING_USERNAME, settings.AFRICASTALKING_API_KEY)
-        sms = africastalking.SMS
-        whatsapp = africastalking.WhatsApp
+        # africastalking.initialize(settings.AFRICASTALKING_USERNAME, settings.AFRICASTALKING_API_KEY) # Commenté pour le déploiement
+        # sms = africastalking.SMS # Commenté pour le déploiement
+        # whatsapp = africastalking.WhatsApp # Commenté pour le déploiement
         
         # Message de base
         base_message = f"Votre mission #{mission.id} a été validée.\n"
@@ -789,35 +788,36 @@ def send_mission_notifications(mission):
         
         # Envoi du SMS si le demandeur a un numéro de téléphone
         if mission.demandeur.telephone:
-            try:
-                sms_response = sms.send(
-                    message=base_message,
-                    recipients=[mission.demandeur.telephone],
-                    sender_id=settings.AFRICASTALKING_SENDER_ID
-                )
-                sms_sent = True
-            except Exception as sms_error:
-                sms_sent = False
-                sms_response = str(sms_error)
+            # try: # Commenté pour le déploiement
+            #     sms_response = sms.send( # Commenté pour le déploiement
+            #         message=base_message, # Commenté pour le déploiement
+            #         recipients=[mission.demandeur.telephone], # Commenté pour le déploiement
+            #         sender_id=settings.AFRICASTALKING_SENDER_ID # Commenté pour le déploiement
+            #     ) # Commenté pour le déploiement
+            #     sms_sent = True # Commenté pour le déploiement
+            # except Exception as sms_error: # Commenté pour le déploiement
+            #     sms_sent = False # Commenté pour le déploiement
+            #     sms_response = str(sms_error) # Commenté pour le déploiement
+            sms_sent = False # Commenté pour le déploiement
+            sms_response = None # Commenté pour le déploiement
         else:
             sms_sent = False
             sms_response = None
         
         # Envoi du message WhatsApp si le demandeur a un numéro de téléphone
         if mission.demandeur.telephone:
-            try:
-                whatsapp_message = f"*Mission #{mission.id} Validée*\n\n{base_message}\n\nMerci d'avoir utilisé notre service."
-                whatsapp_response = whatsapp.send(
-                    message=whatsapp_message,
-                    recipients=[mission.demandeur.telephone]
-                )
-                whatsapp_sent = True
-            except Exception as whatsapp_error:
-                whatsapp_sent = False
-                whatsapp_response = str(whatsapp_error)
-        else:
-            whatsapp_sent = False
-            whatsapp_response = None
+            # try: # Commenté pour le déploiement
+            #     whatsapp_message = f"*Mission #{mission.id} Validée*\n\n{base_message}\n\nMerci d'avoir utilisé notre service." # Commenté pour le déploiement
+            #     whatsapp_response = whatsapp.send( # Commenté pour le déploiement
+            #         message=whatsapp_message, # Commenté pour le déploiement
+            #         recipients=[mission.demandeur.telephone] # Commenté pour le déploiement
+            #     ) # Commenté pour le déploiement
+            #     whatsapp_sent = True # Commenté pour le déploiement
+            # except Exception as whatsapp_error: # Commenté pour le déploiement
+            #     whatsapp_sent = False # Commenté pour le déploiement
+            #     whatsapp_response = str(whatsapp_error) # Commenté pour le déploiement
+            whatsapp_sent = False # Commenté pour le déploiement
+            whatsapp_response = None # Commenté pour le déploiement
         
         # Envoi de l'email si le demandeur a une adresse email
         if mission.demandeur.email:
@@ -825,22 +825,22 @@ def send_mission_notifications(mission):
             html_message = render_to_string('core/email_template.html', {
                 'username': mission.demandeur.username,
                 'message': base_message,
-                'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)",
-                'whatsapp_status': "envoyé" if whatsapp_sent else "non envoyé",
-                'sms_response': sms_response,
-                'whatsapp_response': whatsapp_response
+                # 'sms_status': "envoyé" if sms_sent else "non envoyé (pas de numéro de téléphone)", # Commenté pour le déploiement
+                # 'whatsapp_status': "envoyé" if whatsapp_sent else "non envoyé", # Commenté pour le déploiement
+                # 'sms_response': sms_response, # Commenté pour le déploiement
+                # 'whatsapp_response': whatsapp_response # Commenté pour le déploiement
             })
             plain_message = strip_tags(html_message)
             from_email = settings.EMAIL_HOST_USER
             
-            email_response = send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [mission.demandeur.email],
-                html_message=html_message,
-                fail_silently=False,
-            )
+            # email_response = send_mail( # Commenté pour le déploiement
+            #     subject, # Commenté pour le déploiement
+            #     plain_message, # Commenté pour le déploiement
+            #     from_email, # Commenté pour le déploiement
+            #     [mission.demandeur.email], # Commenté pour le déploiement
+            #     html_message=html_message, # Commenté pour le déploiement
+            #     fail_silently=False, # Commenté pour le déploiement
+            # ) # Commenté pour le déploiement
             email_sent = True
         else:
             email_sent = False

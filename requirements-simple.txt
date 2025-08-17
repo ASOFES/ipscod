@@ -12,5 +12,3 @@ crispy-bootstrap5>=0.7.0
 markdown>=3.0.0
 pdfkit>=1.0.0
 xlsxwriter>=3.0.0
-twilio>=8.0.0
-africastalking>=3.0.0
