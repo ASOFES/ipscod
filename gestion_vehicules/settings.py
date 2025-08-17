@@ -27,22 +27,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Nom : test1
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment')
+SECRET_KEY = 'django-insecure-ipsco-deploy-2025-08-17-secret-key-for-production-deployment'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Nom : DEBUG
-# Valeur : True pour le dÃ©bogage, False en production
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'  # False en production par dÃ©faut
+# Valeur : True pour le débogage, False en production
+DEBUG = False  # False en production par défaut
 
 # Variable pour les tests
 TESTING = False
 
 # Nom : ALLOWED_HOSTS
-# Valeur : domaines autorisÃ©s
+# Valeur : domaines autorisés
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '192.168.43.89',  # IP locale pour accÃ¨s tÃ©lÃ©phone
+    '192.168.43.89',  # IP locale pour accès téléphone
     '192.168.11.102',
     '192.168.11.103',
     'asofes.onrender.com',
@@ -69,7 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Applications personnalisÃ©es
+    # Applications personnalisées
     'core',
     'securite',
     'demandeur',
@@ -92,7 +92,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Middleware CORS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # RÃ©activÃ© pour la sÃ©curitÃ©
+    'django.middleware.csrf.CsrfViewMiddleware',  # Réactivé pour la sécurité
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -221,7 +221,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'fr-fr'
 
-TIME_ZONE = 'Africa/Lubumbashi'  # Lubumbashi est Ã  UTC+2, 1 heure en avance par rapport Ã  Kinshasa
+TIME_ZONE = 'Africa/Lubumbashi'  # Lubumbashi est à UTC+2, 1 heure en avance par rapport à Kinshasa
 
 USE_I18N = True
 
@@ -238,10 +238,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ModÃ¨le utilisateur personnalisÃ©
+# Modèle utilisateur personnalisé
 AUTH_USER_MODEL = 'core.Utilisateur'
 
-# Configuration des mÃ©dias
+# Configuration des médias
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/media'
 
@@ -252,7 +252,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Configuration pour Railway/Heroku
 if not DEBUG:
-    # Utiliser une configuration plus simple pour Ã©viter les problÃ¨mes de manifeste
+    # Utiliser une configuration plus simple pour éviter les problèmes de manifeste
     STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 # Configuration de l'authentification
@@ -323,17 +323,17 @@ LOGGING = {
     },
 }
 
-# CrÃ©er le rÃ©pertoire de logs s'il n'existe pas
+# Créer le répertoire de logs s'il n'existe pas
 os.makedirs(os.path.join(BASE_DIR, 'logs'), exist_ok=True)
 
 # Configuration email
-# Pour le dÃ©veloppement uniquement (les emails sont affichÃ©s dans la console)
+# Pour le développement uniquement (les emails sont affichés dans la console)
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Configuration email avec Gmail
-# Pour utiliser Gmail, suivez ces Ã©tapes:
-# 1. Activez l'authentification Ã  deux facteurs sur votre compte Google: https://myaccount.google.com/security
-# 2. CrÃ©ez un mot de passe d'application: https://myaccount.google.com/apppasswords
+# Pour utiliser Gmail, suivez ces étapes:
+# 1. Activez l'authentification à deux facteurs sur votre compte Google: https://myaccount.google.com/security
+# 2. Créez un mot de passe d'application: https://myaccount.google.com/apppasswords
 # 3. Utilisez ce mot de passe d'application ci-dessous (pas votre mot de passe Gmail habituel)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -343,7 +343,7 @@ EMAIL_HOST_USER = 'toto.mulumba@mamodrc.com'  # Remplace par ton email Gmail
 EMAIL_HOST_PASSWORD = 'your_app_password'  # Remplace par ton mot de passe d'application Gmail
 DEFAULT_FROM_EMAIL = 'noreply@asofes.com'
 
-# Autre option: Configuration avec un service SMTP gÃ©nÃ©rique (comme SendGrid, Mailgun, etc.)
+# Autre option: Configuration avec un service SMTP générique (comme SendGrid, Mailgun, etc.)
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.votreservice.com'
 # EMAIL_PORT = 587
@@ -359,16 +359,16 @@ TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 TWILIO_WHATSAPP_NUMBER = os.getenv('TWILIO_WHATSAPP_NUMBER')
 
-# VÃ©rification des variables d'environnement Twilio
+# Vérification des variables d'environnement Twilio
 if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER]):
-    print("ATTENTION: Les variables d'environnement Twilio ne sont pas toutes dÃ©finies")
+    print("ATTENTION: Les variables d'environnement Twilio ne sont pas toutes définies")
     print("L'envoi de SMS/WhatsApp ne fonctionnera pas correctement")
 
-# Configuration des tÃ¢ches cron
+# Configuration des tâches cron
 CRONJOBS = [
-    # VÃ©rifier les expirations de documents tous les jours Ã  8h00
+    # Vérifier les expirations de documents tous les jours à 8h00
     ('0 8 * * *', 'notifications.tasks.check_document_expirations'),
-    # VÃ©rifier les vÃ©hicules qui nÃ©cessitent un entretien tous les jours Ã  9h00
+    # Vérifier les véhicules qui nécessitent un entretien tous les jours à 9h00
     ('0 9 * * *', 'notifications.tasks.check_maintenance_required'),
 ]
 
@@ -379,9 +379,9 @@ SESSION_COOKIE_SECURE = not DEBUG  # True en production
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SAVE_EVERY_REQUEST = True
 
-# Configuration de sÃ©curitÃ© pour la production
+# Configuration de sécurité pour la production
 if not DEBUG:
-    # DÃ©sactiver SSL redirect pour Railway
+    # Désactiver SSL redirect pour Railway
     SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 31536000  # 1 an
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -390,8 +390,8 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
 
-# === Stockage des mÃ©dias sur Amazon S3 ===
-# DÃ©sactivation du stockage S3 pour Render (on utilise le disque persistant)
+# === Stockage des médias sur Amazon S3 ===
+# Désactivation du stockage S3 pour Render (on utilise le disque persistant)
 # if not DEBUG:
 #     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 #     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
@@ -408,7 +408,7 @@ if not DEBUG:
 
 USE_GCS = os.getenv('USE_GCS', 'False') == 'True'
 
-# Configuration Google Cloud Storage dÃ©sactivÃ©e pour Ã©viter les erreurs d'importation
+# Configuration Google Cloud Storage désactivée pour éviter les erreurs d'importation
 # if USE_GCS and os.getenv('GOOGLE_APPLICATION_CREDENTIALS'):
 #     from google.oauth2 import service_account
 #     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
@@ -428,16 +428,16 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Configuration CORS pour l'application Flutter
 from .cors_config import *
 
-# Configuration des tÃ¢ches planifiÃ©es avec django-crontab
+# Configuration des tâches planifiées avec django-crontab
 CRONJOBS = [
-    # ExÃ©cuter la vÃ©rification des documents et entretiens tous les jours Ã  8h00
+    # Exécuter la vérification des documents et entretiens tous les jours à 8h00
     ('0 8 * * *', 'notifications.tasks.check_documents_and_send_notifications')
 ]
 
 # Format de sortie des logs CRON
 CRONTAB_COMMAND_PREFIX = f'cd {BASE_DIR} && .venv/Scripts/activate &&'
 
-# Fichier de log pour les tÃ¢ches CRON
+# Fichier de log pour les tâches CRON
 CRONTAB_COMMAND_SUFFIX = f'2>&1 >> {BASE_DIR}/cron.log'
 
 # Configuration Django REST Framework
